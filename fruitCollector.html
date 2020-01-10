@@ -1,0 +1,248 @@
+<html>
+  <head>
+    <title>play</title>
+    <style>
+      h1 {
+        display: flex;
+        justify-content: center;
+        color: rgb(31, 54, 184);
+        font-size: 80px;
+      }
+
+      #p1 {
+        display: flex;
+        justify-content: center;
+        font-size: large;
+        font-family: sans-serif;
+      }
+
+      #divMain {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 80px;
+      }
+
+      .button {
+        height: 60px;
+        width: 160px;
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+        background: greenyellow;
+        font: outline;
+        font-size: 20px;
+        outline: none;
+        border-radius: 24px;
+        text-align: center;
+        box-shadow: 5px 4px gray;
+      }
+
+      .button:hover {
+        border-radius: 290px;
+        color: black;
+        transition: width 0.1s;
+        animation-name: example;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+      }
+
+      @keyframes example {
+        50% {
+          background-color: yellow;
+        }
+        100% {
+          background-color: greenyellow;
+        }
+      }
+
+      #divImage {
+        display: flex;
+        justify-content: center;
+      }
+
+      #img1 {
+        display: flex;
+        justify-content: center;
+        padding-right: 10px;
+        padding-top: 50px;
+        position: relative;
+        animation-name: exampleImg1;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-direction: forward;
+      }
+
+      @keyframes exampleImg1 {
+        0% {
+          right: 0px;
+          top: 0px;
+        }
+        33.3% {
+          right: 200px;
+          top: -100px;
+        }
+        66.6% {
+          right: 200px;
+          top: 160px;
+        }
+        100% {
+          right: 0px;
+          top: 0px;
+        }
+      }
+
+      #img3 {
+        display: flex;
+        justify-content: center;
+        padding-right: 10px;
+        padding-top: 10px;
+        position: relative;
+        animation-name: exampleImg3;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-direction: forward;
+      }
+
+      @keyframes exampleImg3 {
+        0% {
+          right: 0px;
+          top: 0px;
+        }
+        33.3% {
+          right: 200px;
+          top: 100px;
+        }
+        66.6% {
+          right: 200px;
+          top: -160px;
+        }
+        100% {
+          right: 0px;
+          top: 0px;
+        }
+      }
+
+      #img2 {
+        display: flex;
+        justify-content: center;
+        padding-left: 0px;
+        padding-top: 50px;
+        animation-name: exampleImg2;
+        position: relative;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-direction: forward;
+      }
+
+      @keyframes exampleImg2 {
+        0% {
+          left: 0px;
+          top: 0px;
+        }
+        33% {
+          left: 200px;
+          top: -100px;
+        }
+        66.6% {
+          left: 200px;
+          top: 160px;
+        }
+        100% {
+          left: 0px;
+          top: 0px;
+        }
+      }
+
+      #img4 {
+        display: flex;
+        justify-content: center;
+        padding-left: 0px;
+        padding-top: 10px;
+        position: relative;
+        animation-name: exampleImg4;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-direction: forward;
+      }
+
+      @keyframes exampleImg4 {
+        0% {
+          left: 0px;
+          top: 0px;
+        }
+        33.3% {
+          left: 200px;
+          top: 100px;
+        }
+        66.6% {
+          left: 200px;
+          top: -160px;
+        }
+        100% {
+          left: 0px;
+          top: 0px;
+        }
+      }
+    </style>
+  </head>
+
+  <body background="fruitBg.jpg">
+    <h1>Collect fruits</h1>
+
+    <form>
+      <div style="display: center;" id="divMain">
+        <div style="padding-right: 50px;">
+          <input
+            type="button "
+            id="b1 "
+            onclick="onB1()"
+            value="New Game"
+            class="button"
+          />
+        </div>
+        <div style="padding-left: 50px;">
+          <input
+            type="button "
+            id="b2 "
+            onclick="onB2()"
+            value="Exit Game"
+            class="button"
+          />
+        </div>
+      </div>
+      <div id="divImage">
+        <div id="img1">
+          <img src="./img1.png" height="40" width="50" alt="fruit pic" />
+        </div>
+        <div id="img2">
+          <img src="./img1.png" height="40" width="50" alt="fruit pic" />
+        </div>
+      </div>
+      <p id="p1"></p>
+      <div id="divImage">
+        <div id="img3">
+          <img src="./img1.png" height="40" width="50" alt="fruit pic" />
+        </div>
+        <div id="img4">
+          <img src="./img1.png" height="40" width="50" alt="fruit pic" />
+        </div>
+      </div>
+    </form>
+
+    <script>
+      function onB1() {
+        location.href = 'getLost.html ';
+      }
+
+      function onB2() {
+        document.getElementById('p1').innerHTML =
+          'I will appreciate if you will play once...I am sure that you will enjoy this';
+      }
+    </script>
+    <footer
+      style="bottom: 20px; position:absolute; text-align: center; padding-left: 650px;"
+    >
+      <hr />
+      Designed By~Rashmi
+    </footer>
+  </body>
+</html>
