@@ -1,7 +1,7 @@
 const createCell = function(x, y) {
-  const cell = document.createElement('div');
-  cell.className = 'cell';
-  cell.id = generateId({colNo: x, rowNo: y});
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  cell.id = generateId({ colNo: x, rowNo: y });
   return cell;
 };
 
@@ -12,13 +12,6 @@ const populateCells = function(grid) {
       grid.appendChild(cell);
     }
   }
-};
-
-const rowNo = 12;
-const colNo = 12;
-
-const generateId = function({colNo, rowNo}) {
-  return `${colNo}_${rowNo}`;
 };
 
 function getBox(content) {
@@ -40,19 +33,10 @@ const eraseAndMoveFruits = function(fruits) {
 const drawFruits = function(fruits) {
   fruits.forEach(fruit => {
     const box = getBox(fruit);
-    const img = document.createElement('img');
+    const img = document.createElement("img");
     img.src = fruit.getImage;
     box.appendChild(img);
   });
-};
-
-const drawBasket = function(basket) {
-  const box = getBox(basket);
-  box.classList.add('zAxis');
-  const img = document.createElement('img');
-  img.classList.add('basket');
-  img.src = basket.getImage;
-  box.appendChild(img);
 };
 
 const eraseBasket = function(basket) {
@@ -61,15 +45,69 @@ const eraseBasket = function(basket) {
   box.removeChild(img);
 };
 
-const getRandomPosition = function() {
+const handleKeyPress = function(basket) {
+  eraseBasket(basket);
+  const key = event.key;
+  switch (key) {
+    case "ArrowRight":
+      basket.moveRight();
+      break;
+    case "ArrowLeft":
+      basket.moveLeft();
+      break;
+  }
+  drawBasket(basket);
+};
+
+const drawBasket = function(basket) {
+  const box = getBox(basket);
+  box.classList.add("zAxis");
+  const img = document.createElement("img");
+  img.classList.add("basket");
+  img.src = basket.getImage;
+  box.appendChild(img);
+};
+
+const attachEventListener = function(basket) {
+  document.body.onkeydown = handleKeyPress.bind(null, basket);
+};
+
+const getRandomPositionOn1stRow = function() {
   const colNo = Math.floor(Math.random() * 12) % 12;
-  return {colNo: colNo, rowNo: 0};
+  return { colNo: colNo, rowNo: 0 };
 };
 
 const getRandomFruit = function() {
-  const fruits = ['apple.png', 'mango.png', 'banana.png', 'img1.png'];
+  const fruits = ["apple.png", "mango.png", "banana.png", "img1.png"];
   return fruits[Math.floor(Math.random() * 4)];
 };
+
+const generateId = function({ colNo, rowNo }) {
+  return `${colNo}_${rowNo}`;
+};
+
+const rowNo = 12;
+const colNo = 12;
+
+class Fruit {
+  constructor(position, fruit) {
+    this.colNo = position.colNo;
+    this.rowNo = position.rowNo;
+    this.fruit = fruit;
+  }
+
+  get getPosition() {
+    return { colNo: this.colNo, rowNo: this.rowNo };
+  }
+
+  get getImage() {
+    return this.fruit;
+  }
+
+  move() {
+    this.rowNo += 1;
+  }
+}
 
 class Basket {
   constructor(position, basket) {
@@ -77,12 +115,13 @@ class Basket {
     this.rowNo = position.rowNo;
     this.basket = basket;
   }
+
   get getImage() {
     return this.basket;
   }
 
   get getPosition() {
-    return {colNo: this.colNo, rowNo: this.rowNo};
+    return { colNo: this.colNo, rowNo: this.rowNo };
   }
 
   moveLeft() {
@@ -97,57 +136,49 @@ class Basket {
   }
 }
 
-class Fruit {
-  constructor(position, fruit) {
-    this.colNo = position.colNo;
-    this.rowNo = position.rowNo;
-    this.fruit = fruit;
-  }
-  get getPosition() {
-    return {colNo: this.colNo, rowNo: this.rowNo};
+class GameMaster {
+  constructor(fruit, basket) {
+    this.fruits = [fruit];
+    this.basket = basket;
   }
 
-  get getImage() {
-    return this.fruit;
+  get getBasket() {
+    return this.basket;
   }
 
-  move() {
-    this.rowNo += 1;
+  get getFruits() {
+    return this.fruits.slice();
+  }
+
+  addFruits(fruit) {
+    this.fruits.push(fruit);
   }
 }
 
-const attachEventListener = function(basket) {
-  document.body.onkeydown = handleKeyPress.bind(null, basket);
+const initializeGameMaster = function() {
+  const fruitImg = getRandomFruit();
+  const position = getRandomPositionOn1stRow();
+  const fruit = new Fruit(position, fruitImg);
+  const basket = new Basket({ colNo: 5, rowNo: 11 }, "basket.png");
+  const game = new GameMaster(fruit, basket);
+  return game;
 };
 
 const main = function() {
-  const grid = document.getElementById('grid');
+  const grid = document.getElementById("grid");
   populateCells(grid);
 
-  const fruits = [];
-  fruits.push(new Fruit(getRandomPosition(), getRandomFruit()));
-  const basket = new Basket({colNo: 5, rowNo: 11}, 'basket.png');
+  const game = initializeGameMaster();
 
-  drawBasket(basket);
-  attachEventListener(basket);
-  drawFruits(fruits);
+  drawBasket(game.getBasket);
+  attachEventListener(game.getBasket);
+  drawFruits(game.getFruits);
+
   setInterval(() => {
-    eraseAndMoveFruits(fruits);
-    fruits.push(new Fruit(getRandomPosition(), getRandomFruit()));
-    drawFruits(fruits);
+    eraseAndMoveFruits(game.getFruits);
+    const position = getRandomPositionOn1stRow();
+    const fruit = getRandomFruit();
+    game.addFruits(new Fruit(position, fruit));
+    drawFruits(game.getFruits);
   }, 800);
-};
-
-const handleKeyPress = function(basket) {
-  eraseBasket(basket);
-  const key = event.key;
-  switch (key) {
-    case 'ArrowRight':
-      basket.moveRight();
-      break;
-    case 'ArrowLeft':
-      basket.moveLeft();
-      break;
-  }
-  drawBasket(basket);
 };
