@@ -1,7 +1,7 @@
 const createCell = function(x, y) {
   const cell = document.createElement('div');
   cell.className = 'cell';
-  cell.id = generateId(x, y);
+  cell.id = generateId({colNo: x, rowNo: y});
   return cell;
 };
 
@@ -14,64 +14,37 @@ const populateCells = function(grid) {
   }
 };
 
-const rowNo = 15;
+const rowNo = 12;
 const colNo = 12;
 
-const generateId = function(x, y) {
-  return `${x}_${y}`;
+const generateId = function({colNo, rowNo}) {
+  return `${colNo}_${rowNo}`;
 };
 
-const getNextId = function(id) {
-  const dim = id.split('_');
-  const colNo = +dim[0];
-  const rowNo = +dim[1] + 1;
-  return generateId(colNo, rowNo);
-};
+function getBox(fruit) {
+  const positions = fruit.getPosition;
+  const id = generateId(positions);
+  const box = document.getElementById(id);
+  return box;
+}
 
-const getFruitDetail = function() {
-  const id = getRandomId();
-  const fruit = getRandomFruit();
-  return {id: id, image: fruit};
+const eraseAndMoveFruits = function(fruits) {
+  fruits.forEach(fruit => {
+    const box = getBox(fruit);
+    const img = box.children[0];
+    box.removeChild(img);
+    fruit.move();
+  });
 };
 
 const drawFruits = function(fruits) {
   fruits.forEach(fruit => {
-    const box = document.getElementById(fruit.id);
+    const box = getBox(fruit);
     const img = document.createElement('img');
-    img.src = fruit.image;
+    img.src = fruit.getImage;
     box.appendChild(img);
   });
 };
-
-const eraseFruits = function(fruits) {
-  fruits.forEach(fruit => {
-    const box = document.getElementById(fruit.id);
-    const img = box.children[0];
-    box.removeChild(img);
-  });
-};
-
-const updatePosition = function(fruit) {
-  const nextId = getNextId(fruit.id);
-  return {id: nextId, image: fruit.image};
-};
-
-const moveFruit = function(fruits) {
-  return fruits.map(updatePosition);
-};
-
-// const initializeGame = function() {
-//   // let prevFruitDetail = [];
-//   // let newFruitDetail = [];
-//   return function() {
-//     // eraseFruits(prevFruitDetail);
-//     // const newFruit = getFruitDetail();
-//     // newFruitDetail.push(newFruit);
-//     // drawFruits(newFruitDetail);
-//     // prevFruitDetail = newFruitDetail.slice();
-//     // newFruitDetail = moveFruit(newFruitDetail);
-//   };
-// };
 
 const getRandomPosition = function() {
   const colNo = Math.floor(Math.random() * 12) % 12;
@@ -89,16 +62,16 @@ class Fruit {
     this.rowNo = position.rowNo;
     this.fruit = fruit;
   }
-  get position() {
+  get getPosition() {
     return {colNo: this.colNo, rowNo: this.rowNo};
   }
 
-  get image() {
+  get getImage() {
     return this.fruit;
   }
 
   move() {
-    this.rowNo++;
+    this.rowNo += 1;
   }
 }
 
@@ -107,7 +80,10 @@ const main = function() {
   populateCells(grid);
   const fruits = [];
   fruits.push(new Fruit(getRandomPosition(), getRandomFruit()));
+  drawFruits(fruits);
   setInterval(() => {
+    eraseAndMoveFruits(fruits);
     fruits.push(new Fruit(getRandomPosition(), getRandomFruit()));
-  }, 1000);
+    drawFruits(fruits);
+  }, 500);
 };
