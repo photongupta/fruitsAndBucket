@@ -26,4 +26,12 @@ img {
 .basket {
   height: 60px;
   width: 90px;
+  margin: 0px;
+  z-index: 2;
+  position: absolute;
+  top: 670;
+}
+
+.zAxis {
+  display: flex;
 }
