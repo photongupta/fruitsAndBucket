@@ -2,6 +2,7 @@ const createCell = function(x, y) {
   const cell = document.createElement('div');
   cell.className = 'cell';
   cell.id = generateId(x, y);
+  return cell;
 };
 
 const populateCells = function(grid) {
@@ -25,7 +26,7 @@ const getRandomId = function() {
   return generateId(colId, 0);
 };
 
-const getFruit = function() {
+const getRandomFruit = function() {
   const fruits = ['apple.png', 'mango.png', 'banana.png', 'img1.png'];
   return fruits[Math.floor(Math.random() * 4)];
 };
@@ -39,11 +40,11 @@ const getNextId = function(id) {
 
 const getFruitDetail = function() {
   const id = getRandomId();
-  const fruit = getFruit();
+  const fruit = getRandomFruit();
   return {id: id, image: fruit};
 };
 
-const drawFruit = function(fruits) {
+const drawFruits = function(fruits) {
   fruits.forEach(fruit => {
     const box = document.getElementById(fruit.id);
     const img = document.createElement('img');
@@ -60,26 +61,31 @@ const eraseFruits = function(fruits) {
   });
 };
 
-const increasePosition = function(fruit) {
+const updatePosition = function(fruit) {
   const nextId = getNextId(fruit.id);
   return {id: nextId, image: fruit.image};
 };
 
-const moveFruit = function(Fruits) {
-  return Fruits.map(increasePosition);
+const moveFruit = function(fruits) {
+  return fruits.map(updatePosition);
+};
+
+const initializeGame = function() {
+  let prevFruitDetail = [];
+  let newFruitDetail = [];
+  return function() {
+    eraseFruits(prevFruitDetail);
+    const newFruit = getFruitDetail();
+    newFruitDetail.push(newFruit);
+    drawFruits(newFruitDetail);
+    prevFruitDetail = newFruitDetail.slice();
+    newFruitDetail = moveFruit(newFruitDetail);
+  };
 };
 
 const main = function() {
   const grid = document.getElementById('grid');
   populateCells(grid);
-  let prevFruitDetail = [];
-  let newFruitDetail = [];
-  setInterval(() => {
-    eraseFruits(prevFruitDetail);
-    const newFruit = getFruitDetail();
-    newFruitDetail.push(newFruit);
-    drawFruit(newFruitDetail);
-    prevFruitDetail = newFruitDetail.slice();
-    newFruitDetail = moveFruit(newFruitDetail);
-  }, 1000);
+  const game = initializeGame();
+  setInterval(game, 1000);
 };
